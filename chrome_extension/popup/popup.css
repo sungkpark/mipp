@@ -1,0 +1,43 @@
+body {
+    width: 20rem;
+    font-family: 'Mali', sans-serif;
+    background-color: #ffb46c;
+}
+
+ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+    margin: 1rem 0;
+}
+
+li {
+    padding: 0.25rem;
+}
+
+li:nth-child(odd) {
+    background: #80808030;
+}
+
+li:nth-child(even) {
+    background: #ffffff;
+}
+
+h3,
+p {
+    margin: 0;
+}
+
+#title {
+    text-align: center;
+}
+
+#ideaInput {
+    width: 100%;
+    background-color: #ffe4bc;
+    height: 162px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border-style: none; 
+    border-color: Transparent;
+}
