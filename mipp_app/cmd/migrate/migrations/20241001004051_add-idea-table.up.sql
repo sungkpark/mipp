@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS ideas (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(255) NOT NULL,
+    `description` TEXT NOT NULL,
+    `username` VARCHAR(255) NOT NULL,
+    `createdAt` TIMESTAMP NOT NULL,
+
+    PRIMARY KEY (id)
+)
