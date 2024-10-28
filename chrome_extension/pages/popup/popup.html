@@ -11,9 +11,9 @@
 <body>
     <h1 id="title">Make It haPPen</h1>
     <p>Hey "<span id="domain-name"></span>", please check out my idea:</p>
-    <form method="post" action="/submission/submission.html">
-        <textarea id="ideaInput" rows="1" placeholder="I would like this to be like this... Tada!"></textarea><br><br>
-        <button type="save" value="Save">Save</button>
+    <form id="idea-form" method="post" action="/pages/submission/submission.html">
+        <textarea id="idea-content" type="text" name="description" placeholder="I would like this to be like this... Tada!"></textarea><br>
+        <input id="idea-title" type="text" name="title" placeholder="Keywords of the idea"></input><br><br>
         <button type="submit" value="Submit">Submit</button>
     </form>
 
