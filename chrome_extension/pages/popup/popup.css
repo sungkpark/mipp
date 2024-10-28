@@ -31,10 +31,20 @@ p {
     text-align: center;
 }
 
-#ideaInput {
+#idea-content {
     width: 100%;
     background-color: #ffe4bc;
     height: 162px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border-style: none; 
+    border-color: Transparent;
+}
+
+#idea-title {
+    width: 100%;
+    background-color: #ffe4bc;
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
