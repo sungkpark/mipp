@@ -4,20 +4,29 @@ const postIdea = BASE_URL + API_V1 + POST_IDEA;
 
 const ideaForm = document.getElementById('idea-form');
 
-async function getCurrentTabDomainName() {
+async function getCurrentCapturedUrl() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     // `tab` will either be a `tabs.Tab` instance or `undefined`.
-    let [tabs] = await chrome.tabs.query(queryOptions);
-    let domainName = tabs.url.split('://')[1].split("/")[0];
-    console.log(domainName);
+    let [tabs] = await chrome.tabs.query(queryOptions); 
+    return tabs.url;
+}
+
+async function getCurrentTabDomainName() {
+    let url = await getCurrentCapturedUrl()
+    let domainName = url.split('://')[1].split("/")[0];
     return domainName;
 }
 
 ideaForm.addEventListener('submit', async (event) => {
     const formData = new FormData(ideaForm);
 
-    formData.append('userName', 'poc user')
-    const formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()))
+    let capturedUrl = await getCurrentCapturedUrl();
+    let domainName = await getCurrentTabDomainName();
+
+    formData.append('userName', 'poc user');
+    formData.append('capturedUrl', capturedUrl);
+    formData.append('domainName', domainName);
+    const formDataJSON = JSON.stringify(Object.fromEntries(formData.entries()));
     const requestOptions = {
         method: POST,
         headers: {
