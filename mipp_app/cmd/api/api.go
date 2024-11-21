@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"mipp.com/app/service/domain"
 	"mipp.com/app/service/idea"
 )
 
@@ -25,8 +26,10 @@ func (s *APIServer) Run() error {
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
+	domainStore := domain.NewStore(s.db)
+
 	ideaStore := idea.NewStore(s.db)
-	ideaHandler := idea.NewHandler(ideaStore)
+	ideaHandler := idea.NewHandler(ideaStore, domainStore)
 	ideaHandler.RegisterRoutes(subrouter)
 
 	log.Println("Listening on", s.addr)

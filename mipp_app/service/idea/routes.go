@@ -12,11 +12,12 @@ import (
 )
 
 type Handler struct {
-	store types.IdeaStore
+	ideaStore   types.IdeaStore
+	domainStore types.DomainStore
 }
 
-func NewHandler(store types.IdeaStore) *Handler {
-	return &Handler{store: store}
+func NewHandler(ideaStore types.IdeaStore, domainStore types.DomainStore) *Handler {
+	return &Handler{ideaStore: ideaStore, domainStore: domainStore}
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
@@ -37,7 +38,7 @@ func (h *Handler) handleGetIdeas(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("missing limit"))
 	}
-	ideas, err := h.store.GetIdeas(offset, limit)
+	ideas, err := h.ideaStore.GetIdeas(offset, limit)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
@@ -61,7 +62,7 @@ func (h *Handler) handleGetIdeaByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	idea, err := h.store.GetIdeaByID(ideaID)
+	idea, err := h.ideaStore.GetIdeaByID(ideaID)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
@@ -88,7 +89,7 @@ func (h *Handler) handleGetIdeasByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	idea, err := h.store.GetIdeasByID(ideaIDsParsed)
+	idea, err := h.ideaStore.GetIdeasByID(ideaIDsParsed)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
@@ -109,7 +110,12 @@ func (h *Handler) handleCreateIdea(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := h.store.CreateIdea(idea)
+	domain, err := h.domainStore.GetDomainByName(idea.DomainName)
+	if err != nil {
+		return
+	}
+
+	err = h.ideaStore.CreateIdea(idea, domain.ID)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return

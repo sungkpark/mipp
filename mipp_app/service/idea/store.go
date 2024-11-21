@@ -18,7 +18,7 @@ func NewStore(db *sql.DB) *Store {
 }
 
 func (s *Store) GetIdeaByID(ideaID int) (*types.Idea, error) {
-	rows, err := s.db.Query("SELECT * FROM ideas WHERE id = ?", ideaID)
+	rows, err := s.db.Query("SELECT * FROM ideas WHERE ideaId = ?", ideaID)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (s *Store) GetIdeaByID(ideaID int) (*types.Idea, error) {
 
 func (s *Store) GetIdeasByID(ideaIDs []int) ([]types.Idea, error) {
 	placeholders := strings.Repeat(",?", len(ideaIDs)-1)
-	query := fmt.Sprintf("SELECT * FROM ideas WHERE id IN (?%s)", placeholders)
+	query := fmt.Sprintf("SELECT * FROM ideas WHERE ideaId IN (?%s)", placeholders)
 
 	args := make([]interface{}, len(ideaIDs))
 	for i, v := range ideaIDs {
@@ -77,8 +77,8 @@ func (s *Store) GetIdeas(offset int, limit int) ([]*types.Idea, error) {
 	return ideas, nil
 }
 
-func (s *Store) CreateIdea(idea types.CreateIdeaPayload) error {
-	_, err := s.db.Exec("INSERT INTO ideas (title, description, username, createdAt) VALUES (?, ?, ?, ?)", idea.Title, idea.Description, idea.UserName, time.Now())
+func (s *Store) CreateIdea(idea types.CreateIdeaPayload, domainId int) error {
+	_, err := s.db.Exec("INSERT INTO ideas (title, description, username, capturedUrl, domainId, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)", idea.Title, idea.Description, idea.UserName, idea.CapturedUrl, domainId, time.Now(), nil)
 	if err != nil {
 		return err
 	}
@@ -86,7 +86,7 @@ func (s *Store) CreateIdea(idea types.CreateIdeaPayload) error {
 }
 
 func (s *Store) UpdateIdea(idea types.Idea) error {
-	_, err := s.db.Exec("UPDATE ideas SET title = ?, description = ?, username = ? WHERE id = ?", idea.Title, idea.Description, idea.UserName, idea.ID)
+	_, err := s.db.Exec("UPDATE ideas SET title = ?, description = ?, username = ?, updatedAt = ? WHERE ideaId = ?", idea.Title, idea.Description, idea.UserName, time.Now(), idea.ID)
 	if err != nil {
 		return err
 	}
@@ -101,7 +101,10 @@ func rowMapper(rows *sql.Rows) (*types.Idea, error) {
 		&idea.Title,
 		&idea.Description,
 		&idea.UserName,
+		&idea.CapturedUrl,
+		&idea.DomainId,
 		&idea.CreatedAt,
+		&idea.UpdatedAt,
 	)
 	if err != nil {
 		return nil, err
