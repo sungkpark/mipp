@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS ideas (
     `description` TEXT NOT NULL,
     `username` VARCHAR(255) NOT NULL,
     `capturedUrl` VARCHAR(2083) NOT NULL,
-    `domainId` INT UNSIGNED,
+    `domainId` INT UNSIGNED NOT NULL,
     `createdAt` TIMESTAMP NOT NULL,
     `updatedAt` TIMESTAMP,
 

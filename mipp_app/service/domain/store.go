@@ -2,6 +2,7 @@ package domain
 
 import (
 	"database/sql"
+	"fmt"
 
 	"mipp.com/app/types"
 )
@@ -62,9 +63,10 @@ func (s *Store) GetDomainByName(domainName string) (*types.Domain, error) {
 	return domain, nil
 }
 
-func (s *Store) GetDomains() ([]*types.Domain, error) {
+func (s *Store) GetDomains(limit int) ([]*types.Domain, error) {
 	// give domains, some sort of time, so that we query 20 by most relevant
-	rows, err := s.db.Query("SELECT * FROM domains LIMIT 16")
+	query := fmt.Sprintf("SELECT * FROM domains LIMIT %v", limit)
+	rows, err := s.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -73,9 +75,12 @@ func (s *Store) GetDomains() ([]*types.Domain, error) {
 	for rows.Next() {
 		domain, err := rowMapper(rows)
 		if err != nil {
-			domains = append(domains, domain)
+			return nil, err
 		}
+
+		domains = append(domains, domain)
 	}
+	
 	return domains, nil
 }
 
