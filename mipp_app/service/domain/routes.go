@@ -34,7 +34,6 @@ func (h *Handler) handleGetDomains(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("missing limit"))
 	}
 	domains, err := h.store.GetDomains(limit)
-	// print(&domains[0].ID)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return

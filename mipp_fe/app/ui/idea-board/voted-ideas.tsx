@@ -1,6 +1,8 @@
 import { FaComment } from "react-icons/fa";
 
-export default function VotedIdeads() {
+export default function VotedIdeads({domainID}: {
+    domainID: number;
+}) {
     return (
         <div className="h-3/5 bg-[#FDE5BF] rounded-2xl">
             <div className="p-6">

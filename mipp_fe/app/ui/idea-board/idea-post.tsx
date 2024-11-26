@@ -1,19 +1,13 @@
 import { Button } from "../button";
 
-export default function IdeaPostWrapper() {
-    return (
-        <div className="flex flex-col">
-            <div className="justify-items-stretch">
-                <IdeaPost title="asdfasdfa" description="adsjfald"></IdeaPost>
-            </div>
-            <div className="justify-items-center p-6">
-                <Button>Vote</Button>
-            </div>
-        </div>
-    );
+export interface IdeaInformation {
+    ideaID: number;
+    title: string;
+    description: string;
+    capturedUrl: string;
 }
 
-export function IdeaPost({
+export default function IdeaPost({
     title,
     description,
 }: {

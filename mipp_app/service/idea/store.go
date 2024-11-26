@@ -58,6 +58,24 @@ func (s *Store) GetIdeasByID(ideaIDs []int) ([]types.Idea, error) {
 	return ideas, nil
 }
 
+func (s *Store) GetIdeasByDomainID(domainID int) ([]types.Idea, error) {
+	rows, err := s.db.Query("SELECT * FROM ideas WHERE domainId = ? ORDER BY rand() LIMIT 3", domainID)
+	if err != nil {
+		return nil, err
+	}
+
+	ideas := []types.Idea{}
+	for rows.Next() {
+		idea, err := rowMapper(rows)
+		if err != nil || idea.DomainId != domainID {
+			return nil, err
+		}
+		ideas = append(ideas, *idea)
+	}
+	
+	return ideas, nil
+}
+
 func (s *Store) GetIdeas(offset int, limit int) ([]*types.Idea, error) {
 	query := fmt.Sprintf("SELECT * FROM ideas LIMIT %v OFFSET %v", limit, offset)
 	rows, err := s.db.Query(query)

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"mipp.com/app/service/domain"
 	"mipp.com/app/service/idea"
 )
@@ -26,6 +27,13 @@ func (s *APIServer) Run() error {
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
+
 	domainStore := domain.NewStore(s.db)
 	domainHandler := domain.NewHandler(domainStore)
 	domainHandler.RegisterRoutes(subrouter)
@@ -36,5 +44,5 @@ func (s *APIServer) Run() error {
 
 	log.Println("Listening on", s.addr)
 
-	return http.ListenAndServe(s.addr, router)
+	return http.ListenAndServe(s.addr, c.Handler(router))
 }

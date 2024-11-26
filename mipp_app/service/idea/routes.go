@@ -23,6 +23,7 @@ func NewHandler(ideaStore types.IdeaStore, domainStore types.DomainStore) *Handl
 func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/ideas/offset/{offset}/limit/{limit}", h.handleGetIdeas).Methods(http.MethodGet)
 	router.HandleFunc("/ideas/{ideaID}", h.handleGetIdeaByID).Methods(http.MethodGet)
+	router.HandleFunc("/ideas/domain-id/{domainID}", h.handleGetIdeasByDomainID).Methods(http.MethodGet)
 	router.HandleFunc("/ideas", h.handleGetIdeasByID).Methods(http.MethodGet)
 
 	router.HandleFunc("/ideas", h.handleCreateIdea).Methods(http.MethodPost)
@@ -69,6 +70,30 @@ func (h *Handler) handleGetIdeaByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, idea)
+}
+
+func (h *Handler) handleGetIdeasByDomainID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	str, ok := vars["domainID"]
+
+	if !ok {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("missing domain ID"))
+		return
+	}
+
+	domainID, err := strconv.Atoi(str)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid domain ID"))
+		return
+	}
+
+	ideas, err := h.ideaStore.GetIdeasByDomainID(domainID)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, ideas)
 }
 
 func (h *Handler) handleGetIdeasByID(w http.ResponseWriter, r *http.Request) {

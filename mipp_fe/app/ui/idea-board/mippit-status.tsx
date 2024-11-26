@@ -1,4 +1,8 @@
-export default function MippitStatus() {
+export default function MippitStatus({
+    domainID,
+}: {
+    domainID: number;
+}) {
     return (
         <div className="h-40 bg-[#FDE5BF] rounded-2xl">
             <div className="p-6">

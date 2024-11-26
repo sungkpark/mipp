@@ -1,18 +1,18 @@
 import { CheckBadgeIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 export default function CompanyInformation({
-    information
+    domainID,
+    information,
 }: {
-    information: string
+    domainID: number;
+    information: string;
 }) {
     return (
         <div className="h-4/5 bg-[#FDE5BF] rounded-2xl">
             <div className="p-6">
                 <div className="text-center font-bold">Company information</div>
                 <div>
-                    <p>
-                        This company was started in bla bla bla blahhhhh
-                    </p>
+                    <p>{information}</p>
                 </div>
                 <div className="text-center font-bold">Company activity</div>
                 <div>

@@ -30,6 +30,7 @@ type CreateIdeaPayload struct {
 type IdeaStore interface {
 	GetIdeaByID(ideaID int) (*Idea, error)
 	GetIdeasByID(ideaIDs []int) ([]Idea, error)
+	GetIdeasByDomainID(domainID int) ([]Idea, error)
 	GetIdeas(offset int, limit int) ([]*Idea, error)
 	CreateIdea(CreateIdeaPayload, int) error
 }
@@ -40,10 +41,6 @@ type Domain struct {
 	CompanyInformation *string `json:"companyInformation"`
 	Verified           bool    `json:"verified"`
 }
-
-// type CreateDomainPayload struct {
-	// DomainName string `json:"domainName" validate:"required"`
-// }
 
 type DomainStore interface {
 	GetDomainByID(domainID int) (*Domain, error)

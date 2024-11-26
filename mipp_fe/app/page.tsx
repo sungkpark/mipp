@@ -1,7 +1,17 @@
 import { mali } from '@/app/ui/font/fonts';
-import DomainBallWrapper from './ui/domain-balls';
+import { fetchDomains } from './lib/api';
+import DomainBall from './ui/domain-balls';
 
-export default function Page() {
+export interface DomainProp {
+  domainId: number;
+  domainName: string;
+  companyInformation: string;
+  verified: boolean;
+}
+
+export default async function Page() {
+  let domainPageProps = await fetchDomains()
+
   return (
     <main className="flex items-center min-h-screen flex-col p-8">
       <div className="flex flex-col gap-4 w-3/4 md:flex-row">
@@ -13,7 +23,11 @@ export default function Page() {
           </p>
         </div>
       </div>
-      <DomainBallWrapper></DomainBallWrapper>
+      <div className="grid grid-rows-2 grid-flow-col gap-12">
+        {domainPageProps.map((domainProp) => (
+          <DomainBall domainProp={domainProp}></DomainBall>
+        ))}
+      </div>
     </main>
   );
 }
